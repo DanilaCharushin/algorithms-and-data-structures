@@ -82,7 +82,6 @@ public:
     }
 
     List(const List<Data> &list) {
-        // TODO: logic for creating copy of list instance
         this->head = this->tail = nullptr;
         int k = list.getSize();
         for (int i = 0; i < k; i++) {
@@ -105,7 +104,7 @@ public:
         return size;
     }
 
-    bool isEmpty() {
+    bool isEmpty() const {
         return size == 0;
     }
 
@@ -132,7 +131,7 @@ public:
             if (index >= this->size) {
                 this->push(data);
                 if (index > this->size)
-                    cout << "WARNING: index > list size, => index = size" << endl;
+                    cout << "INFO: index > list size, => index = size" << endl;
                 return;
             }
             Node *nodeAfter = this->head;
@@ -148,7 +147,7 @@ public:
             if (abs(index) >= this->size + 1) {
                 this->push(data, 0);
                 if (abs(index) > this->size + 1)
-                    cout << "WARNING: abs(index) > list size + 1, => index = 0" << endl;
+                    cout << "INFO: abs(index) > list size + 1, => index = 0" << endl;
                 return;
             }
             this->push(data, this->size + 1 + index);
@@ -174,6 +173,10 @@ public:
 
     Node *operator[](int index) const {
         // TODO: Do exceptions
+        if (this->size == 0) {
+            cout << "INFO: list is empty, cannot get node by index" << endl;
+            return nullptr;
+        }
         Node *node = this->head;
         for (int i = 0; i < index; i++) {
             node = node->getNext();
