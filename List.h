@@ -124,10 +124,29 @@ public:
             this->increaseSize();
         } else if (index > 0) {
             // add node to head + index
-            // TODO: logic for add node to positive index (from head node)
+            if (index >= this->size) {
+                this->push(data);
+                if (index > this->size)
+                    cout << "WARNING: index > list size, => index = size" << endl;
+                return;
+            }
+            Node *nodeAfter = this->head;
+            for (int i = 0; i < index; ++i) {
+                nodeAfter = nodeAfter->getNext();
+            }
+            Node *node = new Node(data, nodeAfter, nodeAfter->getPrev());
+            nodeAfter->getPrev()->setNext(node);
+            nodeAfter->setPrev(node);
+            this->increaseSize();
         } else {
             // add node to tail + index (tail - abs(index))
-            // TODO: logic for add node to negative index (from tail node)
+            if (abs(index) >= this->size + 1) {
+                this->push(data, 0);
+                if (abs(index) > this->size + 1)
+                    cout << "WARNING: abs(index) > list size + 1, => index = 0" << endl;
+                return;
+            }
+            this->push(data, this->size + 1 + index);
         }
     }
 
