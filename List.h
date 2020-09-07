@@ -81,8 +81,13 @@ public:
         }
     }
 
-    List(const List &list) {
+    List(const List<Data> &list) {
         // TODO: logic for creating copy of list instance
+        this->head = this->tail = nullptr;
+        int k = list.getSize();
+        for (int i = 0; i < k; i++) {
+            this->push(list[i]->getData());
+        }
     }
 
     ~List() {
@@ -96,7 +101,7 @@ public:
         }
     }
 
-    int getSize() {
+    int getSize() const {
         return size;
     }
 
@@ -150,6 +155,10 @@ public:
         }
     }
 
+    Data pop(int index = 0) {
+        // TODO: Do pop
+    }
+
     void print() {
         if (this->isEmpty()) {
             cout << "<empty list>" << endl;
@@ -161,6 +170,15 @@ public:
             node = node->getNext();
         }
         cout << endl;
+    }
+
+    Node *operator[](int index) const {
+        // TODO: Do exceptions
+        Node *node = this->head;
+        for (int i = 0; i < index; i++) {
+            node = node->getNext();
+        }
+        return node;
     }
 };
 

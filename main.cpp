@@ -9,10 +9,13 @@ int main() {
     cout << "############ START TEST ############" << endl;
 
     List<double> list(5);
+    List<double> list2 = list;
 
     list.print();
 
-    list.print();
+    list2.print();
+
+
 
     cout << "############# END TEST #############" << endl;
 
