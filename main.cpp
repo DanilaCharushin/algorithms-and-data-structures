@@ -8,13 +8,12 @@ using namespace std;
 int main() {
     cout << "############ START TEST ############" << endl;
 
-    List<int> list;
-    list.push(4);
-    list.push(10);
-    list.push(6);
-    list.push(7);
-    list.push(8);
-    list.push();
+    List<int> list(5);
+
+    list.print();
+
+    list.push(999, 0);
+    list.push(-5, 0);
 
     list.print();
 

@@ -68,9 +68,12 @@ private:
 
 public:
     List(int size = 0) {
-        this->size = size;
+        this->size = 0;
         if (size > 0) {
-            // TODO: logic for adding nodes with random data
+            this->head = this->tail = nullptr;
+            for (int i = 0; i < size; ++i) {
+                this->push(Data(rand() % 201 - 100));
+            }
         } else if (size < 0) {
             throw invalid_argument("List size must be non-negative");
         } else {
@@ -103,11 +106,16 @@ public:
 
     void push(Data data = Data(), int index = -1) {
         if (this->isEmpty()) {
+            // add first node
             Node *node = new Node(data);
             this->head = this->tail = node;
             this->increaseSize();
         } else if (index == 0) {
-            // TODO: logic for add node to head
+            // add node to head
+            Node *node = new Node(data, this->head, nullptr);
+            this->head->setPrev(node);
+            this->head = node;
+            this->increaseSize();
         } else if (index == -1) {
             // add node to tail
             Node *node = new Node(data, nullptr, this->tail);
@@ -115,8 +123,10 @@ public:
             this->tail = node;
             this->increaseSize();
         } else if (index > 0) {
+            // add node to head + index
             // TODO: logic for add node to positive index (from head node)
         } else {
+            // add node to tail + index (tail - abs(index))
             // TODO: logic for add node to negative index (from tail node)
         }
     }
