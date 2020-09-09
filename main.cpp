@@ -8,14 +8,11 @@ using namespace std;
 int main() {
     cout << "############ START TEST ############" << endl;
 
-    List<double> list(5);
-    List<double> list2 = list;
+    List<int> list(5);
 
     list.print();
 
-    list2.print();
-
-
+    cout << list.contains(0) << endl;
 
     cout << "############# END TEST #############" << endl;
 
