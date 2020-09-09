@@ -83,9 +83,10 @@ public:
 
     List(const List<Data> &list) {
         this->head = this->tail = nullptr;
+        this->size = 0;
         int k = list.getSize();
         for (int i = 0; i < k; i++) {
-            this->push(list[i]->getData());
+            this->push(list.getNodeByIndex(i)->getData());
         }
     }
 
@@ -150,14 +151,53 @@ public:
                     cout << "INFO: abs(index) > list size + 1, => index = 0" << endl;
                 return;
             }
-            this->push(data, this->size + 1 + index);
+            this->push(data, this->size + index);
         }
     }
 
     Data pop(int index = 0) {
         // TODO: Do pop
-        // test
+        if (!isIndexInList(index))
+            throw invalid_argument("Index out of bounds");
+        if (index < 0) {
+            index = this->size + index;
+        }
+        Node *node = nullptr;
+        if (index == 0) {
+            node = this->head;
+            head = head->getNext();
+            head->setPrev(nullptr);
+            return node->getData();
+        }
+        if (index == size - 1) {
+            node = this->operator[](index);
+            this->tail = node->getPrev();
+            tail->setNext(nullptr);
+            return node->getData();
+        }
+        if (index > 0) {
+            node = this->operator[](index);
+            node->getPrev()->setNext(node->getNext());
+            node->getNext()->setPrev(node->getPrev());
+            return node->getData();
+        }
+        throw exception("Unknown exception");
     }
+
+    bool isIndexInList(int index) {
+        if (index >= 0) {
+            if (index >= size)
+                return false;
+            else return true;
+        }
+        else {
+            if (size+index+1<0)
+                return false;
+            else return true;
+        }
+    }
+
+    //TODO: Удаление по индексу и значению
 
     void print() {
         if (this->isEmpty()) {
@@ -172,7 +212,20 @@ public:
         cout << endl;
     }
 
-    Node *operator[](int index) const {
+    Node *getNodeByIndex(int index) const {
+        // TODO: Do exceptions
+        if (this->size == 0) {
+            cout << "INFO: list is empty, cannot get node by index" << endl;
+            return nullptr;
+        }
+        Node *node = this->head;
+        for (int i = 0; i < index; i++) {
+            node = node->getNext();
+        }
+        return node;
+    }
+
+    Node *operator[](int index) {
         // TODO: Do exceptions
         if (this->size == 0) {
             cout << "INFO: list is empty, cannot get node by index" << endl;

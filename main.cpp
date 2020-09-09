@@ -12,6 +12,10 @@ int main() {
     List<double> list2 = list;
 
     list.print();
+    cout << list.pop(-1) << endl;
+    list.push(-2,-2);
+    list.print();
+
 
     list2.print();
 
