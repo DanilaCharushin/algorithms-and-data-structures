@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include "List.h"
 using namespace std;
 
@@ -6,13 +7,18 @@ using namespace std;
 
 #ifdef TEST
 int main() {
+    srand(time(nullptr));
     cout << "############ START TEST ############" << endl;
 
     List<int> list(5);
 
     list.print();
 
-    cout << list.contains(0) << endl;
+    cout << list.contains(list[0]->getData()) << endl;
+
+    for (auto i = list.begin(); i.inList(); i++) {
+        cout << (*i)->getData() << endl;
+    }
 
     cout << "############# END TEST #############" << endl;
 
