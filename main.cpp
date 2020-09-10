@@ -17,11 +17,17 @@ int main() {
 
     cout << list.contains(list[0]->getData()) << endl;
 
-    list.deleteByData(-59);
+    list.remove(-59);
 
     list.print();
 
     for (auto i = list.begin(); i.inList(); i++) {
+        cout << (*i)->getData() << endl;
+    }
+
+    cout << "------------" << endl;
+
+    for (auto i = list.rbegin(); i.inList(); i++) {
         cout << (*i)->getData() << endl;
     }
 
