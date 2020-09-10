@@ -8,6 +8,7 @@ using namespace std;
 #ifdef TEST
 int main() {
     srand(time(nullptr));
+
     cout << "############ START TEST ############" << endl;
 
     List<int> list(5);
@@ -15,6 +16,10 @@ int main() {
     list.print();
 
     cout << list.contains(list[0]->getData()) << endl;
+
+    list.deleteByData(-59);
+
+    list.print();
 
     for (auto i = list.begin(); i.inList(); i++) {
         cout << (*i)->getData() << endl;
