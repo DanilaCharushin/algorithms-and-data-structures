@@ -184,14 +184,41 @@ public:
         throw exception("Unknown exception");
     }
 
+    void deleteByData(Data data) {
+        int index;
+        try {
+            index = findData(data);
+        }
+        catch (exception ex) {
+            cout << ex.what();
+            return;
+        }
+        if (index < 0) {
+            cout << "Can't find data in list" << endl;
+            return;
+        }
+        pop(index);
+    }
+
+    int findData(Data data) {
+        if (isEmpty())
+            throw exception("List is empty");
+        Node *node = head;
+        for (int index = 0; node != nullptr; index++) {
+            if (node->getData() == data)
+                return index;
+            node = node->getNext();
+        }
+        return -1;
+    }
+
     bool isIndexInList(int index) {
         if (index >= 0) {
             if (index >= size)
                 return false;
             else return true;
-        }
-        else {
-            if (size+index+1<0)
+        } else {
+            if (size + index + 1 < 0)
                 return false;
             else return true;
         }
