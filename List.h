@@ -1,6 +1,7 @@
 //
 // Created by danil on 05.09.2020.
 //
+//TODO: Iterator back steps
 
 #ifndef LAB1_LIST_H
 #define LAB1_LIST_H
