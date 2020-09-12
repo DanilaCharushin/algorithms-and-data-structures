@@ -43,7 +43,12 @@ public:
             Console().print("In list: ", 0);
             Console().printb(it.hasList());
             Console().print("Current value: ", 0);
-            Console().print(it.getData());
+            try {
+                Console().print(it.getData());
+            }
+            catch (runtime_error er) {
+                Console().print(er.what());
+            }
             Console().print("Next node: ", 0);
             Console().printb(it.hasNext());
             Console().print("----------------------------------");
@@ -86,7 +91,12 @@ public:
             Console().print("In list: ", 0);
             Console().printb(it.hasList());
             Console().print("Current value: ", 0);
-            Console().print(it.getData());
+            try {
+                Console().print(it.getData());
+            }
+            catch (runtime_error er) {
+                Console().print(er.what());
+            }
             Console().print("Next node: ", 0);
             Console().printb(it.hasNext());
             Console().print("----------------------------------");
