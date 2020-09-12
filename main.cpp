@@ -6,7 +6,7 @@
 #include "List.h"
 #include "Console.h"
 #include "Menu.h"
-
+//TODO: replace all menu actions at class MENU
 
 using namespace std;
 
@@ -59,12 +59,13 @@ int main() {
         Console().cls();
         Menu().printActionsList();
         cin >> action;
+        Console().print("\n\n---ACTION!---");
         switch (action) {
             case 0:
                 flag = false;
                 break;
             case 1:
-                Console().print("Размер массива: ");
+                Console().print("Size of list: ", 0);
                 Console().print(list.getSize());
                 break;
             case 2:
@@ -72,59 +73,68 @@ int main() {
                 break;
             case 3:
                 if (list.isEmpty())
-                    Console().print("Список пуст!");
+                    Console().print("List is empty!", 0);
                 else
-                    Console().print("Список НЕ пуст!");
+                    Console().print("List is NOT empty!", 0);
                 break;
             case 4:
-                Console().print("Введите искомое значение: ");
+                Console().print("Enter value: ", 0);
                 cin >> tmp;
                 if (list.contains(tmp))
-                    Console().print("Список содержит это значение");
+                    Console().print("List contains this value", 0);
                 else
-                    Console().print("Список содержит это значение");
+                    Console().print("List NOT contains this value", 0);
                 break;
             case 5:
-                Console().print("Введите искомое значение: ");
+                Console().print("Enter value: ", 0);
                 cin >> tmp;
                 Console().print(list.getAt(tmp));
                 break;
             case 6:
+                Console().print("Enter position: ", 0);
+                cin >> tmp;
+                Console().print("Enter new value: ", 0);
+                cin >> number;
+                list.setAt(number, tmp);
                 break;
             case 7:
-                Console().print("Введите искомое значение: ");
+                Console().print("Enter value: ", 0);
                 cin >> tmp;
                 Console().print(list.indexOf(tmp));
                 break;
             case 8:
-                Console().print("Введите новое значение: ");
+                Console().print("Enter new value: ", 0);
                 cin >> tmp;
                 list.push(tmp);
                 break;
             case 9:
-                Console().print("Введите новое значение: ");
+                Console().print("Enter new value: ", 0);
                 cin >> tmp;
-                Console().print("Введите желаемую позицию: ");
+                Console().print("Enter position: ", 0);
                 cin >> number;
                 list.push(tmp, number);
                 break;
             case 10:
-                Console().print("Введите значение: ");
+                Console().print("Enter value: ", 0);
                 cin >> tmp;
                 list.remove(tmp);
                 break;
             case 11:
-                Console().print("Введите gjpbwb.: ");
+                Console().print("Enter position: ", 0);
                 cin >> tmp;
                 list.pop(tmp);
                 break;
             case 12:
+                Menu().iteratorMenu(List<>::Iterator(&list));
                 break;
             case 13:
+                Menu().iteratorMenu(List<>::rIterator(&list));
                 break;
             case 14:
+                Menu().iteratorMenu(List<>::Iterator());
                 break;
             case 15:
+                Menu().iteratorMenu(List<>::rIterator());
                 break;
             case 16:
                 break;
@@ -132,11 +142,11 @@ int main() {
                 list.print();
                 break;
             default:
-                Console().print("Введено некорректное значение");
+                Console().print("Incorrect value!");
                 break;
         }
-        Console().print("\n");
-        Console().print("---ACTION DONE!---\n");
+        Console().print("---ACTION DONE!---");
+        _getch();
 
     }
     return 0;
