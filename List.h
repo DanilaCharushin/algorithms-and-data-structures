@@ -57,10 +57,12 @@ private:
 
     void checkAllExceptions();
 
+    Node *getNodeAt(int &counter, int index);
+
 public:
     explicit List(int size = 0);
 
-    List(List<Data> &list);
+    List(const List<Data> &list);
 
     ~List();
 
@@ -74,11 +76,11 @@ public:
 
     void clear();
 
-    void push(Data data = Data(), int index = -1);
+    void push(int &counter, Data data = Data(), int index = -1);
 
-    Data pop(int index = 0);
+    Data pop(int &counter, int index = 0);
 
-    bool contains(Data data = Data());
+    bool contains(int &counter, Data data = Data());
 
     void print();
 
@@ -95,7 +97,6 @@ public:
     class Iterator {
         List<Data> *list;
         Node *node;
-
 
     public:
         explicit Iterator(List<Data> *list = nullptr);
@@ -174,7 +175,9 @@ public:
     rIterator rend();
 };
 
-// ########################################################################################################################################################################################################
+// #####################################################
+//                        Node
+// #####################################################
 
 template<class Data>
 List<Data>::Node::Node(Data data, Node *next, Node *prev) {
@@ -201,6 +204,10 @@ typename List<Data>::Node *List<Data>::Node::getPrev() { return this->prev; }
 template<class Data>
 void List<Data>::Node::setPrev(Node *prev) { this->prev = prev; }
 
+// #####################################################
+//                        List
+// #####################################################
+
 template<class Data>
 List<Data>::List(int size) {
     if (size < 0) {
@@ -208,15 +215,15 @@ List<Data>::List(int size) {
     }
     this->nullify();
     for (int i = 0; i < size; ++i) {
-        this->push(Data(rand() % 201 - 100));
+        this->push(0, Data(rand() % 201 - 100));
     }
 }
 
 template<class Data>
-List<Data>::List(List<Data> &list) {
+List<Data>::List(const List<Data> &list) {
     this->nullify();
     for (int i = 0; i < list.getSize(); i++) {
-        this->push(list[i]->getData());
+        this->push(0, list[i]->getData());
     }
 }
 
@@ -300,7 +307,7 @@ int List<Data>::calcIndex(int index) {
 }
 
 template<class Data>
-void List<Data>::push(Data data, int index) {
+void List<Data>::push(int &counter, Data data, int index) {
     if (this->isEmpty()) {
         // DOC: add first node
         Node *node = new Node(data);
@@ -321,7 +328,7 @@ void List<Data>::push(Data data, int index) {
     } else if (index > 0) {
         // DOC: add node to head + index
         if (index >= this->size) {
-            this->push(data);
+            this->push(counter, data);
             if (index > this->size)
                 cout << "INFO: index > list size, => index = size" << endl;
             return;
@@ -342,12 +349,12 @@ void List<Data>::push(Data data, int index) {
                 cout << "INFO: abs(index) > list size + 1, => index = 0" << endl;
             return;
         }
-        this->push(data, this->size + 1 + index);
+        this->push(counter, data, this->size + 1 + index);
     }
 }
 
 template<class Data>
-Data List<Data>::pop(int index) {
+Data List<Data>::pop(int &counter, int index) {
     if (this->calcIndex(index) == -1)
         throw invalid_argument("Index out of bounds");
     if (index < 0) {
@@ -355,19 +362,20 @@ Data List<Data>::pop(int index) {
     }
     Node *node = nullptr;
     if (index == 0) {
+        counter++;
         node = this->head;
         this->head = this->head->getNext();
         this->head->setPrev(nullptr);
         return node->getData();
     }
     if (index == this->size - 1) {
-        node = this->operator[](index);
+        node = this->getNodeAt(counter, index);
         this->tail = node->getPrev();
         this->tail->setNext(nullptr);
         return node->getData();
     }
     if (index > 0) {
-        node = this->operator[](index);
+        node = this->getNodeAt(counter, index);
         node->getPrev()->setNext(node->getNext());
         node->getNext()->setPrev(node->getPrev());
         return node->getData();
@@ -376,8 +384,9 @@ Data List<Data>::pop(int index) {
 }
 
 template<class Data>
-bool List<Data>::contains(Data data) {
+bool List<Data>::contains(int &counter, Data data) {
     for (auto it = this->begin(); it.hasNode(); it++) {
+        counter++;
         if (it.getData() == data) {
             return true;
         }
@@ -399,12 +408,7 @@ void List<Data>::print() {
 
 template<class Data>
 typename List<Data>::Node *List<Data>::operator[](int index) {
-    this->checkAllExceptions();
-    Node *node = this->head;
-    for (int i = 0; i < index; i++) {
-        node = node->getNext();
-    }
-    return node;
+    return this->getNodeAt(0, index);
 }
 
 template<class Data>
@@ -457,7 +461,7 @@ Data List<Data>::getAt(int index) {
         throw out_of_range("ERROR: index out of bounds");
     }
 
-    return this->operator[](index)->getData();
+    return this->getNodeAt(0, index)->getData();
 }
 
 template<class Data>
@@ -467,7 +471,7 @@ void List<Data>::setAt(Data data, int index) {
     if (index == -1) {
         throw out_of_range("ERROR: index out of bounds");
     }
-    this->operator[](index)->setData(data);
+    this->getNodeAt(0, index)->setData(data);
 }
 
 template<class Data>
@@ -481,6 +485,20 @@ template<class Data>
 void List<Data>::checkAllExceptions() {
     this->checkEmptyListException();
 }
+
+template<class Data>
+typename List<Data>::Node *List<Data>::getNodeAt(int &counter, int index) {
+    this->checkAllExceptions();
+    Node *node = this->head;
+    for (int i = 0; i < index; i++, counter++) {
+        node = node->getNext();
+    }
+    return node;
+}
+
+// #####################################################
+//                       Iterator
+// #####################################################
 
 template<class Data>
 List<Data>::Iterator::Iterator(List<Data> *list) {
@@ -571,6 +589,10 @@ template<class Data>
 void List<Data>::Iterator::operator--(int) {
     this->prev();
 }
+
+// #####################################################
+//                       rIterator
+// #####################################################
 
 template<class Data>
 List<Data>::rIterator::rIterator(List<Data> *list) {
