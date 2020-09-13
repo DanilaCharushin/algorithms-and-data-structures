@@ -7,8 +7,6 @@
 
 #include <iostream>
 #include <cstring>
-#include <conio.h>
-#include <stdio.h>
 
 using namespace std;
 

@@ -49,8 +49,6 @@ public:
             catch (runtime_error er) {
                 Console().print(er.what());
             }
-            Console().print("Next node: ", 0);
-            Console().printb(it.hasNext());
             Console().print("----------------------------------");
             Console().print("---------------MENU---------------");
             Console().print("0) EXIT");
@@ -97,8 +95,6 @@ public:
             catch (runtime_error er) {
                 Console().print(er.what());
             }
-            Console().print("Next node: ", 0);
-            Console().printb(it.hasNext());
             Console().print("----------------------------------");
             Console().print("---------------MENU---------------");
             Console().print("0) EXIT");

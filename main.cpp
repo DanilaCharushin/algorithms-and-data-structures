@@ -1,8 +1,5 @@
-#include <locale.h>
 #include <iostream>
-#include <stdio.h>
 #include <ctime>
-#include "Windows.h"
 #include "List.h"
 #include "Console.h"
 #include "Menu.h"
@@ -10,7 +7,7 @@
 
 using namespace std;
 
-#define TST
+#define TEST
 
 #ifdef TEST
 int main() {
@@ -18,27 +15,12 @@ int main() {
 
     cout << "############ START TEST ############" << endl;
 
-    List<int> list(5);
-
+    List<double> list(5);
     list.print();
-
-    cout << list.contains(list[0]->getData()) << endl;
-
-    list.remove(-59);
-
-    Console().print("str\n", Console().RED);
-
+    cout << list.getAt(-2) << endl;
+    list.setAt(99.9, -2);
+    cout << list.getAt(-2) << endl;
     list.print();
-
-    for (auto i = list.begin(); i.inList(); i++) {
-        cout << (*i)->getData() << endl;
-    }
-
-    cout << "------------" << endl;
-
-    for (auto i = list.rbegin(); i.inList(); i++) {
-        cout << (*i)->getData() << endl;
-    }
 
     cout << "############# END TEST #############" << endl;
 

@@ -40,8 +40,7 @@ private:
 
     enum class EXCEPTIONS {
         ITERATOR_HAS_NO_LIST,
-        ITERATOR_OUT_OF_LIST,
-        ITERATOR_HAS_NO_NEXT,
+        ITERATOR_HAS_NO_NODE,
     };
 
     Node *head;
@@ -54,22 +53,24 @@ private:
 
     static const char *PARSE_EXCEPTION(EXCEPTIONS exception);
 
-    void checkForEmptyList();
+    void checkEmptyListException();
+
+    void checkAllExceptions();
 
 public:
     explicit List(int size = 0);
 
-    List(const List<Data> &list);
+    List(List<Data> &list);
 
     ~List();
 
-    Node *getHead() const;
+    Node *getHead();
 
-    Node *getTail() const;
+    Node *getTail();
 
-    int getSize() const;
+    int getSize();
 
-    bool isEmpty() const;
+    bool isEmpty();
 
     void clear();
 
@@ -89,11 +90,12 @@ public:
 
     void remove(Data data = Data());
 
-    Node *operator[](int index) const;
+    Node *operator[](int index);
 
     class Iterator {
         List<Data> *list;
         Node *node;
+
 
     public:
         explicit Iterator(List<Data> *list = nullptr);
@@ -122,7 +124,7 @@ public:
 
         void toTail();
 
-        void checkForExceptions();
+        void checkAllExceptions();
     };
 
     class rIterator {
@@ -156,7 +158,7 @@ public:
 
         void toTail();
 
-        void checkForExceptions();
+        void checkAllExceptions();
     };
 
     friend class Iterator;
@@ -171,6 +173,8 @@ public:
 
     rIterator rend();
 };
+
+// ########################################################################################################################################################################################################
 
 template<class Data>
 List<Data>::Node::Node(Data data, Node *next, Node *prev) {
@@ -209,7 +213,7 @@ List<Data>::List(int size) {
 }
 
 template<class Data>
-List<Data>::List(const List<Data> &list) {
+List<Data>::List(List<Data> &list) {
     this->nullify();
     for (int i = 0; i < list.getSize(); i++) {
         this->push(list[i]->getData());
@@ -222,22 +226,22 @@ List<Data>::~List() {
 }
 
 template<class Data>
-typename List<Data>::Node *List<Data>::getHead() const {
+typename List<Data>::Node *List<Data>::getHead() {
     return this->head;
 }
 
 template<class Data>
-typename List<Data>::Node *List<Data>::getTail() const {
+typename List<Data>::Node *List<Data>::getTail() {
     return this->tail;
 }
 
 template<class Data>
-int List<Data>::getSize() const {
+int List<Data>::getSize() {
     return this->size;
 }
 
 template<class Data>
-bool List<Data>::isEmpty() const {
+bool List<Data>::isEmpty() {
     return this->size == 0;
 }
 
@@ -273,7 +277,7 @@ void List<Data>::remove(Data data) {
 
 template<class Data>
 int List<Data>::indexOf(Data data) {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     int index = 0;
     for (auto it = this->begin(); it.hasNode(); it++) {
         if (it.getData() == data) {
@@ -394,10 +398,8 @@ void List<Data>::print() {
 }
 
 template<class Data>
-typename List<Data>::Node *List<Data>::operator[](int index) const {
-    // TODO: Do exceptions
-    this->checkForEmptyList();
-    
+typename List<Data>::Node *List<Data>::operator[](int index) {
+    this->checkAllExceptions();
     Node *node = this->head;
     for (int i = 0; i < index; i++) {
         node = node->getNext();
@@ -434,7 +436,7 @@ const char *List<Data>::PARSE_EXCEPTION(EXCEPTIONS exception) {
     switch (exception) {
         case EXCEPTIONS::ITERATOR_HAS_NO_LIST:
             return "ERROR: iterator has no list";
-        case EXCEPTIONS::ITERATOR_OUT_OF_LIST:
+        case EXCEPTIONS::ITERATOR_HAS_NO_NODE:
             return "ERROR: iterator is out of the list";
         default:
             return "UNKNOWN ERROR: iterator error";
@@ -449,22 +451,35 @@ void List<Data>::nullify() {
 
 template<class Data>
 Data List<Data>::getAt(int index) {
-    this->checkForEmptyList();
-    // TODO: realize like push method + add exceptions
+    this->checkAllExceptions();
+    index = this->calcIndex(index);
+    if (index == -1) {
+        throw out_of_range("ERROR: index out of bounds");
+    }
+
     return this->operator[](index)->getData();
 }
 
 template<class Data>
 void List<Data>::setAt(Data data, int index) {
-    // TODO: realize like push method + add exceptions
-    return this->operator[](index)->setData(data);
+    this->checkAllExceptions();
+    index = this->calcIndex(index);
+    if (index == -1) {
+        throw out_of_range("ERROR: index out of bounds");
+    }
+    this->operator[](index)->setData(data);
 }
 
 template<class Data>
-void List<Data>::checkForEmptyList() {
+void List<Data>::checkEmptyListException() {
     if (this->isEmpty()) {
-        throw runtime_error("List is empty"); // FIXME: exception type
+        throw runtime_error("List is empty");
     }
+}
+
+template<class Data>
+void List<Data>::checkAllExceptions() {
+    this->checkEmptyListException();
 }
 
 template<class Data>
@@ -483,7 +498,7 @@ void List<Data>::Iterator::setList(List<Data> *list) {
 
 template<class Data>
 void List<Data>::Iterator::next() {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     this->node = this->node->getNext();
 }
 
@@ -494,12 +509,7 @@ bool List<Data>::Iterator::hasList() {
 
 template<class Data>
 Data List<Data>::Iterator::getData() {
-    if (!this->hasList()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
-    }
-    if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_OF_LIST));
-    }
+    this->checkAllExceptions();
     return this->node->getData();
 }
 
@@ -521,12 +531,7 @@ void List<Data>::Iterator::toTail() {
 
 template<class Data>
 void List<Data>::Iterator::setData(Data data) {
-    if (!this->hasList()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
-    }
-    if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_OF_LIST));
-    }
+    this->checkAllExceptions();
     this->node->setData(data);
 }
 
@@ -542,29 +547,29 @@ bool List<Data>::Iterator::hasNode() {
 
 template<class Data>
 typename List<Data>::Node *List<Data>::Iterator::operator*() {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     return this->node;
 }
 
 template<class Data>
-void List<Data>::Iterator::checkForExceptions() {
+void List<Data>::Iterator::checkAllExceptions() {
     if (!this->hasList()) {
         throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
     }
     if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_NO_NODE));
+        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_NODE));
     }
 }
 
 template<class Data>
 void List<Data>::Iterator::prev() {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     this->node = this->node->getPrev();
 }
 
 template<class Data>
 void List<Data>::Iterator::operator--(int) {
-    this->prev()
+    this->prev();
 }
 
 template<class Data>
@@ -583,12 +588,7 @@ void List<Data>::rIterator::setList(List<Data> *list) {
 
 template<class Data>
 void List<Data>::rIterator::next() {
-    if (!this->hasList()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
-    }
-    if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_OF_LIST));
-    }
+    this->checkAllExceptions();
     this->node = this->node->getPrev();
 }
 
@@ -599,12 +599,7 @@ bool List<Data>::rIterator::hasList() {
 
 template<class Data>
 Data List<Data>::rIterator::getData() {
-    if (!this->hasList()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
-    }
-    if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_OF_LIST));
-    }
+    this->checkAllExceptions();
     return this->node->getData();
 }
 
@@ -626,7 +621,7 @@ void List<Data>::rIterator::toTail() {
 
 template<class Data>
 void List<Data>::rIterator::setData(Data data) {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     this->node->setData(data);
 }
 
@@ -642,7 +637,7 @@ bool List<Data>::rIterator::hasNode() {
 
 template<class Data>
 typename List<Data>::Node *List<Data>::rIterator::operator*() {
-    this->checkForExceptions();
+    this->checkAllExceptions();
     return this->node;
 }
 
@@ -657,12 +652,12 @@ void List<Data>::rIterator::prev() {
 }
 
 template<class Data>
-void List<Data>::rIterator::checkForExceptions() {
+void List<Data>::rIterator::checkAllExceptions() {
     if (!this->hasList()) {
         throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_LIST));
     }
     if (!this->hasNode()) {
-        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_OUT_OF_LIST));
+        throw runtime_error(PARSE_EXCEPTION(EXCEPTIONS::ITERATOR_HAS_NO_NODE));
     }
 }
 
