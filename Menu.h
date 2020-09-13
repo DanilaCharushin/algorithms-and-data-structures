@@ -8,8 +8,103 @@
 
 class Menu {
 public:
-    void startMenu() {
-        printActionsList();
+    void startMenu(List<> &list) {
+        bool flag = true;
+        int action = 0;
+        int tmp, number;
+        while (flag) {
+            Console().cls();
+            Menu().printActionsList();
+            cin >> action;
+            Console().print("\n\n---ACTION!---");
+            switch (action) {
+                case 0:
+                    flag = false;
+                    break;
+                case 1:
+                    Console().print("Size of list: ", 0);
+                    Console().print(list.getSize());
+                    break;
+                case 2:
+                    list.clear();
+                    break;
+                case 3:
+                    if (list.isEmpty())
+                        Console().print("List is empty!", 0);
+                    else
+                        Console().print("List is NOT empty!", 0);
+                    break;
+                case 4:
+                    Console().print("Enter value: ", 0);
+                    cin >> tmp;
+                    if (list.contains(tmp))
+                        Console().print("List contains this value", 0);
+                    else
+                        Console().print("List NOT contains this value", 0);
+                    break;
+                case 5:
+                    Console().print("Enter value: ", 0);
+                    cin >> tmp;
+                    Console().print(list.getAt(tmp));
+                    break;
+                case 6:
+                    Console().print("Enter position: ", 0);
+                    cin >> tmp;
+                    Console().print("Enter new value: ", 0);
+                    cin >> number;
+                    list.setAt(number, tmp);
+                    break;
+                case 7:
+                    Console().print("Enter value: ", 0);
+                    cin >> tmp;
+                    Console().print(list.indexOf(tmp));
+                    break;
+                case 8:
+                    Console().print("Enter new value: ", 0);
+                    cin >> tmp;
+                    list.push(tmp);
+                    break;
+                case 9:
+                    Console().print("Enter new value: ", 0);
+                    cin >> tmp;
+                    Console().print("Enter position: ", 0);
+                    cin >> number;
+                    list.push(tmp, number);
+                    break;
+                case 10:
+                    Console().print("Enter value: ", 0);
+                    cin >> tmp;
+                    list.remove(tmp);
+                    break;
+                case 11:
+                    Console().print("Enter position: ", 0);
+                    cin >> tmp;
+                    list.pop(tmp);
+                    break;
+                case 12:
+                    Menu().iteratorMenu(list);
+                    break;
+                case 13:
+                    Menu().riteratorMenu(list);
+                    break;
+                case 14:
+                    Menu().iteratorMenu(list);
+                    break;
+                case 15:
+                    Menu().riteratorMenu(list);
+                    break;
+                case 16:
+                    break;
+                case 17:
+                    list.print();
+                    break;
+                default:
+                    Console().print("Incorrect value!");
+                    break;
+            }
+            Console().print("---ACTION DONE!---\n\n");
+
+        }
     }
 
     void printActionsList() {
@@ -32,16 +127,17 @@ public:
         Console().print("15) Get empty reverse iterator");
         Console().print("16) Запрос числа элементов списка, просмотренных операциями"
                         " опроса наличия заданного значения, включения нового значения в"
-                        " позицию с заданным номером, удаления значения из позиции с заданным номером(");
+                        " позицию с заданным номером, удаления значения из позиции с заданным номером");
         Console().print("17) Print list");
     }
 
-    void iteratorMenu(List<>::Iterator it) {
+    void iteratorMenu(List<> &list) {
+        List<>::Iterator it = List<>::Iterator(&list);
         bool flag = 1;
         int action = 0;
         while (flag) {
             Console().print("In list: ", 0);
-            Console().printb(it.hasList());
+            Console().printbool(it.hasList());
             Console().print("Current value: ", 0);
             try {
                 Console().print(it.getData());
@@ -50,6 +146,7 @@ public:
                 Console().print(er.what());
             }
             Console().print("----------------------------------");
+            list.print();
             Console().print("---------------MENU---------------");
             Console().print("0) EXIT");
             Console().print("1) Go to next");
@@ -82,12 +179,14 @@ public:
         }
 
     }
-    void iteratorMenu(List<>::rIterator it) {
+
+    void riteratorMenu(List<> &list) {
+        List<>::rIterator it = List<>::rIterator(&list);
         bool flag = 1;
         int action = 0;
         while (flag) {
             Console().print("In list: ", 0);
-            Console().printb(it.hasList());
+            Console().printbool(it.hasList());
             Console().print("Current value: ", 0);
             try {
                 Console().print(it.getData());
@@ -96,6 +195,7 @@ public:
                 Console().print(er.what());
             }
             Console().print("----------------------------------");
+            list.print();
             Console().print("---------------MENU---------------");
             Console().print("0) EXIT");
             Console().print("1) Go to next");

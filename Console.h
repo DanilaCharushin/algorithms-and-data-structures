@@ -20,14 +20,6 @@ public:
         DEFAULT, RED, GREEN, BLUE
     };
 
-//    static void print(char *str, COLORS color = DEFAULT) {
-//        switch (color) {
-//            case RED:
-//                system("color 04");
-//        }
-//        cout << str;
-//        system("color 07");
-//    }
 
     static void print(int str, bool newline = true, COLORS color = DEFAULT) {
         switch (color) {
@@ -51,7 +43,7 @@ public:
         system("color 07");
     }
 
-    static void printb(bool str, bool newline = true, COLORS color = DEFAULT) {
+    static void printbool(bool str, bool newline = true, COLORS color = DEFAULT) {
         switch (color) {
             case RED:
                 system("color 04");
