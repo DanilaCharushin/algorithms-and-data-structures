@@ -4,6 +4,7 @@
 
 #ifndef LAB1_CONSOLE_H
 #define LAB1_CONSOLE_H
+#define WINDOWS
 
 //#define COLOR_ON
 

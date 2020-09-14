@@ -140,22 +140,22 @@ public:
         int action = 0;
         while (flag) {
             Console::print("In list: ");
-            Console::printBool(it.hasList());
+            Console::printlnBool(it.hasList());
             Console::print("Current value: ");
             try {
-                Console::print(it.getData());
+                Console::println(it.getData());
             }
             catch (const runtime_error &er) {
-                Console::print(er.what());
+                Console::println(er.what());
             }
-            Console::print("----------------------------------");
+            Console::println("----------------------------------");
             list.print();
-            Console::print("---------------MENU---------------");
-            Console::print("0) EXIT");
-            Console::print("1) Go to next");
-            Console::print("2) Change value");
-            Console::print("3) Drop list");
-            Console::print("4) To head");
+            Console::println("---------------MENU---------------");
+            Console::println("0) EXIT");
+            Console::println("1) Go to next");
+            Console::println("2) Change value");
+            Console::println("3) Drop list");
+            Console::println("4) To head");
             cin >> action;
             switch (action) {
                 case 0:
@@ -175,7 +175,7 @@ public:
                 case 4:
                     it.toHead();
                 default:
-                    Console::print("Incorrect value");
+                    Console::println("Incorrect value");
                     break;
             }
             getchar();
@@ -188,9 +188,10 @@ public:
         bool flag = true;
         int action = 0;
         while (flag) {
-            Console::print("In list: ");
+            Console::println("In list: ");
             Console::printBool(it.hasList());
-            Console::print("Current value: ");
+            Console::println("");
+            Console::println("Current value: ");
             try {
                 Console::println(it.getData());
             }
