@@ -30,7 +30,7 @@ int main() {
 int main() {
     srand(time(nullptr));
 
-    List<int> list(10);
+    List<int> list(0);
     Menu::startMenu(list);
     return 0;
 }

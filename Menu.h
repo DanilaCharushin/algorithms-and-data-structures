@@ -107,19 +107,19 @@ public:
                     break;
                 case 12:
                     it = list.begin();
-                    Menu::iteratorMenu(list, it);
+                    Menu::iteratorMenu(&list, &it);
                     break;
                 case 13:
                     rit = list.rbegin();
-                    Menu::riteratorMenu(list, rit);
+                    Menu::riteratorMenu(&list, &rit);
                     break;
                 case 14:
                     it = list.end();
-                    Menu::iteratorMenu(list, it);
+                    Menu::iteratorMenu(&list, &it);
                     break;
                 case 15:
                     rit = list.rend();
-                    Menu::riteratorMenu(list, rit);
+                    Menu::riteratorMenu(&list, &rit);
                     break;
                 case 16:
                     Console::print("Counter = ");
@@ -171,22 +171,22 @@ public:
         Console::println("20) rIterator == rend()");
     }
 
-    static void iteratorMenu(List<> &list, List<>::Iterator it) {
+    static void iteratorMenu(List<> *list, List<>::Iterator *it) {
         bool flag = true;
         int action = 0;
         while (flag) {
             Console::print("Has list: ");
-            Console::printlnBool(it.hasList());
+            Console::printlnBool(it->hasList());
             Console::print("Has node: ");
-            Console::printlnBool(it.hasNode());
+            Console::printlnBool(it->hasNode());
             Console::print("Current value: ");
             try {
-                Console::println(it.getData());
+                Console::println(it->getData());
             } catch (const exception &ex) {
                 Console::println("EXCEPTION");
             }
             Console::println("----------------------------------");
-            list.print();
+            list->print();
             Console::println("---------------MENU---------------");
             Console::println("0) EXIT");
             Console::println("1) Go to next");
@@ -203,47 +203,48 @@ public:
                     break;
                 case 1:
                     try {
-                        it.next();
+                        it->next();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 2:
                     try {
-                        it.prev();
+                        it->prev();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 3:
                     try {
-                        Console::println(it.getData());
+                        Console::println(it->getData());
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 4:
                     Console::print("Enter value: ");
-                    cin >> action;
+                    int val;
+                    cin >> val;
                     try {
-                        it.setData(action);
+                        Console::printlnBool(it->setData(val));
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
-                        Console::println(ex.what());
                     }
+                    break;
                 case 5:
-                    it.setList();
+                    it->setList();
                     break;
                 case 6:
                     try {
-                        it.toHead();
+                        it->toHead();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 7:
                     try {
-                        it.toTail();
+                        it->toTail();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
@@ -254,25 +255,24 @@ public:
             }
             getchar();
         }
-
     }
 
-    static void riteratorMenu(List<> &list, List<>::rIterator it) {
+    static void riteratorMenu(List<> *list, List<>::rIterator *it) {
         bool flag = true;
         int action = 0;
         while (flag) {
             Console::print("Has list: ");
-            Console::printlnBool(it.hasList());
+            Console::printlnBool(it->hasList());
             Console::print("Has node: ");
-            Console::printlnBool(it.hasNode());
+            Console::printlnBool(it->hasNode());
             Console::print("Current value: ");
             try {
-                Console::println(it.getData());
+                Console::println(it->getData());
             } catch (const exception &ex) {
                 Console::println("EXCEPTION");
             }
             Console::println("----------------------------------");
-            list.print();
+            list->print();
             Console::println("---------------MENU---------------");
             Console::println("0) EXIT");
             Console::println("1) Go to next");
@@ -289,46 +289,48 @@ public:
                     break;
                 case 1:
                     try {
-                        it.next();
+                        it->next();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 2:
                     try {
-                        it.prev();
+                        it->prev();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 3:
                     try {
-                        Console::println(it.getData());
+                        Console::println(it->getData());
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 4:
                     Console::print("Enter value: ");
-                    cin >> action;
+                    int val;
+                    cin >> val;
                     try {
-                        it.setData(action);
+                        Console::printlnBool(it->setData(val));
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
+                    break;
                 case 5:
-                    it.setList();
+                    it->setList();
                     break;
                 case 6:
                     try {
-                        it.toHead();
+                        it->toHead();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
                     break;
                 case 7:
                     try {
-                        it.toTail();
+                        it->toTail();
                     } catch (const exception &ex) {
                         Console::println("EXCEPTION");
                     }
@@ -339,7 +341,6 @@ public:
             }
             getchar();
         }
-
     }
 };
 

@@ -143,7 +143,7 @@ public:
 
         Data getData();
 
-        void setData(Data data = Data());
+        bool setData(Data data = Data());
 
         void toHead();
 
@@ -191,7 +191,7 @@ public:
 
         Data getData();
 
-        void setData(Data data = Data());
+        bool setData(Data data = Data());
 
         void toHead();
 
@@ -610,9 +610,14 @@ void List<Data>::Iterator::toTail() {
 }
 
 template<class Data>
-void List<Data>::Iterator::setData(Data data) {
-    this->checkAllExceptions();
+bool List<Data>::Iterator::setData(Data data) {
+    try {
+        this->checkAllExceptions();
+    } catch (...) {
+        return false;
+    }
     this->node->setData(data);
+    return true;
 }
 
 template<class Data>
@@ -715,9 +720,14 @@ void List<Data>::rIterator::toTail() {
 }
 
 template<class Data>
-void List<Data>::rIterator::setData(Data data) {
-    this->checkAllExceptions();
+bool List<Data>::rIterator::setData(Data data) {
+    try {
+        this->checkAllExceptions();
+    } catch (...) {
+        return false;
+    }
     this->node->setData(data);
+    return true;
 }
 
 template<class Data>
