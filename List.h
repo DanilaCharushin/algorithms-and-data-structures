@@ -84,9 +84,11 @@ public:
 
     void clear();
 
-    void push(int &counter, Data data = Data(), int index = -1);
+    void insert(int &counter, Data data = Data());
 
-    Data pop(int &counter, int index = 0);
+    bool insertAt(int &counter, Data data = Data(), int index = -1);
+
+    bool removeAt(int &counter, int index = 0);
 
     bool contains(int &counter, Data data = Data());
 
@@ -98,9 +100,13 @@ public:
 
     int indexOf(Data data = Data());
 
-    void remove(int &counter, Data data = Data());
+    bool remove(int &counter, Data data = Data());
 
     Node *operator[](int index);
+
+    friend class Iterator;
+
+    friend class rIterator;
 
     class Iterator {
         List<Data> *list;
@@ -115,6 +121,8 @@ public:
 
         void prev();
 
+        void setNodeToNull();
+
         void operator++(int);
 
         void operator--(int);
@@ -124,6 +132,14 @@ public:
         bool hasNode();
 
         Node *operator*();
+
+        bool operator==(Iterator it) {
+            return this->node == it.node;
+        }
+
+        bool operator!=(Iterator it) {
+            return this->node != it.node;
+        }
 
         Data getData();
 
@@ -153,6 +169,8 @@ public:
 
         void prev();
 
+        void setNodeToNull();
+
         void operator++(int);
 
         void operator--(int);
@@ -162,6 +180,14 @@ public:
         bool hasNode();
 
         Node *operator*();
+
+        bool operator==(rIterator it) {
+            return this->node == it.node;
+        }
+
+        bool operator!=(rIterator it) {
+            return this->node != it.node;
+        }
 
         Data getData();
 
@@ -177,10 +203,6 @@ public:
 
         void checkAllExceptions();
     };
-
-    friend class Iterator;
-
-    friend class rIterator;
 
     Iterator begin();
 
@@ -230,7 +252,7 @@ List<Data>::List(int size) {
     this->nullify();
     int foo = 0;
     for (int i = 0; i < size; ++i) {
-        this->push(foo, Data(rand() % 201 - 100));
+        this->insert(foo, Data(rand() % 201 - 100));
     }
 }
 
@@ -239,7 +261,7 @@ List<Data>::List(const List<Data> &list) {
     this->nullify();
     int foo = 0;
     for (int i = 0; i < list.getSize(); i++) {
-        this->push(foo, list[i]->getData());
+        this->insert(foo, list[i]->getData());
     }
 }
 
@@ -282,10 +304,15 @@ void List<Data>::clear() {
 }
 
 template<class Data>
-void List<Data>::remove(int &counter, Data data) {
+bool List<Data>::remove(int &counter, Data data) {
     this->checkEmptyListException();
-    this->checkInvalidDataException(data);
-    this->pop(counter, this->indexOf(data));
+    try {
+        this->checkInvalidDataException(data);
+    } catch (...) {
+        return false;
+    }
+    return this->removeAt(counter, this->indexOf(data));
+
 }
 
 template<class Data>
@@ -306,38 +333,56 @@ int List<Data>::calcIndex(int index) {
     if (index < -this->size || index >= this->size) {
         return -1;
     }
-    if (index < 0) {
-        index += this->size;
-    }
     return index;
 }
 
 template<class Data>
-void List<Data>::push(int &counter, Data data, int index) {
+void List<Data>::insert(int &counter, Data data) {
     if (this->isEmpty()) {
         // DOC: add first node
         Node *node = new Node(data);
         this->head = this->tail = node;
         this->size++;
-    } else if (index == 0) {
-        // DOC: add node to head
-        Node *node = new Node(data, this->head, nullptr);
-        this->head->setPrev(node);
-        this->head = node;
-        this->size++;
-    } else if (index == -1) {
+        counter++;
+    } else {
         // DOC: add node to tail
         Node *node = new Node(data, nullptr, this->tail);
         this->tail->setNext(node);
         this->tail = node;
         this->size++;
+        counter++;
+    }
+}
+
+template<class Data>
+bool List<Data>::insertAt(int &counter, Data data, int index) {
+     if (index == 0) {
+        // DOC: add node to head
+        if (this->isEmpty()) {
+            Node *node = new Node(data);
+            this->head = this->tail = node;
+            this->size++;
+            counter++;
+            return true;
+        }
+        Node *node = new Node(data, this->head, nullptr);
+        this->head->setPrev(node);
+        this->head = node;
+        this->size++;
+        counter++;
+        return true;
+    } else if (index == this->size) {
+        // DOC: add node to tail
+        Node *node = new Node(data, nullptr, this->tail);
+        this->tail->setNext(node);
+        this->tail = node;
+        this->size++;
+        counter++;
+        return true;
     } else if (index > 0) {
         // DOC: add node to head + index
-        if (index >= this->size) {
-            this->push(counter, data);
-            if (index > this->size)
-                cout << "INFO: index > list size, => index = size" << endl;
-            return;
+        if (index > this->size) {
+            return false;
         }
         Node *nodeAfter = this->head;
         for (int i = 0; i < index; ++i) {
@@ -348,39 +393,38 @@ void List<Data>::push(int &counter, Data data, int index) {
         nodeAfter->getPrev()->setNext(node);
         nodeAfter->setPrev(node);
         this->size++;
-    } else {
-        // DOC: add node to tail + index (tail - abs(index))
-        if (abs(index) >= this->size + 1) {
-            this->push(data, 0);
-            if (abs(index) > this->size + 1)
-                cout << "INFO: abs(index) > list size + 1, => index = 0" << endl;
-            return;
-        }
-        this->push(counter, data, this->size + 1 + index);
+        return true;
     }
+    return false;
 }
 
 template<class Data>
-Data List<Data>::pop(int &counter, int index) {
+bool List<Data>::removeAt(int &counter, int index) {
     this->checkEmptyListException();
     index = this->calcIndex(index);
-    this->checkInvalidIndexException(index);
+    try {
+        this->checkInvalidIndexException(index);
+    } catch(...) {
+        return false;
+    }
     Node *node = nullptr;
     if (index == 0) {
+        counter++;
         node = this->head;
         this->head = this->head->getNext();
         this->head->setPrev(nullptr);
-        return node->getData();
+        return true;
     } else if (index == this->size - 1) {
+        counter++;
         node = this->getNodeAt(counter, index);
         this->tail = node->getPrev();
         this->tail->setNext(nullptr);
-        return node->getData();
+        return true;
     } else {
         node = this->getNodeAt(counter, index);
         node->getPrev()->setNext(node->getNext());
         node->getNext()->setPrev(node->getPrev());
-        return node->getData();
+        return true;
     }
 }
 
@@ -401,7 +445,7 @@ void List<Data>::print() {
     if (this->isEmpty()) {
         cout << "<empty list>" << endl;
     } else {
-        for (auto it = this->begin(); it.hasNode(); it++) {
+        for (auto it = this->begin(); it != this->end(); it++) {
             cout << it.getData() << " ";
         }
         cout << endl;
@@ -422,7 +466,7 @@ typename List<Data>::Iterator List<Data>::begin() {
 template<class Data>
 typename List<Data>::Iterator List<Data>::end() {
     Iterator iterator(this);
-    iterator.toTail();
+    iterator.setNodeToNull();
     return iterator;
 }
 
@@ -434,7 +478,7 @@ typename List<Data>::rIterator List<Data>::rbegin() {
 template<class Data>
 typename List<Data>::rIterator List<Data>::rend() {
     rIterator iterator(this);
-    iterator.toHead();
+    iterator.setNodeToNull();
     return iterator;
 }
 
@@ -583,7 +627,6 @@ bool List<Data>::Iterator::hasNode() {
 
 template<class Data>
 typename List<Data>::Node *List<Data>::Iterator::operator*() {
-    this->checkAllExceptions();
     return this->node;
 }
 
@@ -616,6 +659,12 @@ template<class Data>
 void List<Data>::Iterator::checkAllExceptions() {
     this->checkNoListException();
     this->checkNoNodeException();
+}
+
+template<class Data>
+void List<Data>::Iterator::setNodeToNull() {
+    this->checkNoListException();
+    this->node = nullptr;
 }
 
 // #####################################################
@@ -683,7 +732,6 @@ bool List<Data>::rIterator::hasNode() {
 
 template<class Data>
 typename List<Data>::Node *List<Data>::rIterator::operator*() {
-    this->checkAllExceptions();
     return this->node;
 }
 
@@ -715,6 +763,12 @@ template<class Data>
 void List<Data>::rIterator::checkAllExceptions() {
     this->checkNoListException();
     this->checkNoNodeException();
+}
+
+template<class Data>
+void List<Data>::rIterator::setNodeToNull() {
+    this->checkNoListException();
+    this->node = nullptr;
 }
 
 #endif //LAB1_LIST_H
