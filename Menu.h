@@ -8,151 +8,154 @@
 
 class Menu {
 public:
-    void startMenu(List<> &list) {
+    static void startMenu(List<> &list) {
         bool flag = true;
         int action = 0;
-        int tmp, number;
+        int tmp, number, counter = 0;
         while (flag) {
-            Console().cls();
-            Menu().printActionsList();
+            Console::cls();
+            Menu::printActionsList();
             cin >> action;
-            Console().print("\n\n---ACTION!---");
+            Console::print("\n\n---ACTION---\n\n");
             switch (action) {
                 case 0:
                     flag = false;
                     break;
                 case 1:
-                    Console().print("Size of list: ", 0);
-                    Console().print(list.getSize());
+                    Console::print("Size of list: ");
+                    Console::print(list.getSize());
                     break;
                 case 2:
                     list.clear();
                     break;
                 case 3:
                     if (list.isEmpty())
-                        Console().print("List is empty!", 0);
+                        Console::print("List is empty!");
                     else
-                        Console().print("List is NOT empty!", 0);
+                        Console::print("List is NOT empty!");
                     break;
                 case 4:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> tmp;
-                    if (list.contains(tmp))
-                        Console().print("List contains this value", 0);
+                    counter = 0;
+                    if (list.contains(counter, tmp))
+                        Console::print("List contains this value");
                     else
-                        Console().print("List NOT contains this value", 0);
+                        Console::print("List NOT contains this value");
                     break;
                 case 5:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> tmp;
-                    Console().print(list.getAt(tmp));
+                    Console::println(list.getAt(counter, tmp));
                     break;
                 case 6:
-                    Console().print("Enter position: ", 0);
+                    Console::print("Enter position: ");
                     cin >> tmp;
-                    Console().print("Enter new value: ", 0);
+                    Console::print("Enter new value: ");
                     cin >> number;
-                    list.setAt(number, tmp);
+                    list.setAt(counter, number, tmp);
                     break;
                 case 7:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> tmp;
-                    Console().print(list.indexOf(tmp));
+                    Console::print(list.indexOf(tmp));
                     break;
                 case 8:
-                    Console().print("Enter new value: ", 0);
+                    Console::print("Enter new value: ");
                     cin >> tmp;
                     list.push(tmp);
                     break;
                 case 9:
-                    Console().print("Enter new value: ", 0);
+                    Console::print("Enter new value: ");
                     cin >> tmp;
-                    Console().print("Enter position: ", 0);
+                    Console::print("Enter position: ");
                     cin >> number;
-                    list.push(tmp, number);
+                    counter = 0;
+                    list.push(counter, tmp, number);
                     break;
                 case 10:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> tmp;
                     list.remove(tmp);
                     break;
                 case 11:
-                    Console().print("Enter position: ", 0);
+                    Console::print("Enter position: ");
                     cin >> tmp;
-                    list.pop(tmp);
+                    counter = 0;
+                    list.pop(counter, tmp);
                     break;
                 case 12:
-                    Menu().iteratorMenu(list);
+                    Menu::iteratorMenu(list);
                     break;
                 case 13:
-                    Menu().riteratorMenu(list);
+                    Menu::riteratorMenu(list);
                     break;
                 case 14:
-                    Menu().iteratorMenu(list);
+                    Menu::iteratorMenu(list);
                     break;
                 case 15:
-                    Menu().riteratorMenu(list);
+                    Menu::riteratorMenu(list);
                     break;
                 case 16:
+                    Console::print("Counter = ");
+                    Console::println(counter);
                     break;
                 case 17:
                     list.print();
                     break;
                 default:
-                    Console().print("Incorrect value!");
+                    Console::print("Incorrect value!");
                     break;
             }
-            Console().print("---ACTION DONE!---\n\n");
+            Console::print("\n\n---DONE---\n\n");
 
         }
     }
 
-    void printActionsList() {
-        Console().print("---MENU---");
-        Console().print("0) EXIT");
-        Console().print("1) Check list size");
-        Console().print("2) Clear list");
-        Console().print("3) Is empty?");
-        Console().print("4) Is contains value?");
-        Console().print("5) Find value by index");
-        Console().print("6) Change value by index");
-        Console().print("7) Get index by value");
-        Console().print("8) Push new value");
-        Console().print("9) Push new value by index");
-        Console().print("10) Delete node by value");
-        Console().print("11) Delete node by index");
-        Console().print("12) Get iterator");
-        Console().print("13) Get reverse iterator");
-        Console().print("14) Get empty iterator");
-        Console().print("15) Get empty reverse iterator");
-        Console().print("16) Запрос числа элементов списка, просмотренных операциями"
-                        " опроса наличия заданного значения, включения нового значения в"
-                        " позицию с заданным номером, удаления значения из позиции с заданным номером");
-        Console().print("17) Print list");
+    static void printActionsList() {
+        Console::println("---MENU---");
+        Console::println("0) EXIT");
+        Console::println("1) Check list size");
+        Console::println("2) Clear list");
+        Console::println("3) Is empty?");
+        Console::println("4) Is contains value?");
+        Console::println("5) Find value by index");
+        Console::println("6) Change value by index");
+        Console::println("7) Get index by value");
+        Console::println("8) Push new value");
+        Console::println("9) Push new value by index");
+        Console::println("10) Delete node by value");
+        Console::println("11) Delete node by index");
+        Console::println("12) Get iterator");
+        Console::println("13) Get reverse iterator");
+        Console::println("14) Get empty iterator");
+        Console::println("15) Get empty reverse iterator");
+        Console::println("16) Print counter");
+        Console::println("17) Print list");
     }
 
-    void iteratorMenu(List<> &list) {
+    static void iteratorMenu(List<> &list) {
         List<>::Iterator it = List<>::Iterator(&list);
         bool flag = 1;
         int action = 0;
         while (flag) {
-            Console().print("In list: ", 0);
-            Console().printbool(it.hasList());
-            Console().print("Current value: ", 0);
+            Console::print("In list: ");
+            Console::printBool(it.hasList());
+            Console::print("Current value: ");
             try {
-                Console().print(it.getData());
+                Console::print(it.getData());
             }
-            catch (runtime_error er) {
-                Console().print(er.what());
+            catch (const runtime_error &er) {
+                Console::print(er.what());
             }
-            Console().print("----------------------------------");
+            Console::print("----------------------------------");
             list.print();
-            Console().print("---------------MENU---------------");
-            Console().print("0) EXIT");
-            Console().print("1) Go to next");
-            Console().print("2) Change value");
-            Console().print("3) Drop list");
-            Console().print("4) To head");
+            Console::print("---------------MENU---------------");
+            Console::print("0) EXIT");
+            Console::print("1) Go to next");
+            Console::print("2) Change value");
+            Console::print("3) Drop list");
+            Console::print("4) To head");
             cin >> action;
             switch (action) {
                 case 0:
@@ -162,7 +165,7 @@ public:
                     it.next();
                     break;
                 case 2:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> action;
                     it.setData();
                     break;
@@ -172,36 +175,36 @@ public:
                 case 4:
                     it.toHead();
                 default:
-                    Console().print("Incorrect value");
+                    Console::print("Incorrect value");
                     break;
             }
-            //_getch();
+            getchar();
         }
 
     }
 
-    void riteratorMenu(List<> &list) {
+    static void riteratorMenu(List<> &list) {
         List<>::rIterator it = List<>::rIterator(&list);
-        bool flag = 1;
+        bool flag = true;
         int action = 0;
         while (flag) {
-            Console().print("In list: ", 0);
-            Console().printbool(it.hasList());
-            Console().print("Current value: ", 0);
+            Console::print("In list: ");
+            Console::printBool(it.hasList());
+            Console::print("Current value: ");
             try {
-                Console().print(it.getData());
+                Console::println(it.getData());
             }
-            catch (runtime_error er) {
-                Console().print(er.what());
+            catch (const runtime_error &er) {
+                Console::println(er.what());
             }
-            Console().print("----------------------------------");
+            Console::println("----------------------------------");
             list.print();
-            Console().print("---------------MENU---------------");
-            Console().print("0) EXIT");
-            Console().print("1) Go to next");
-            Console().print("2) Change value");
-            Console().print("3) Drop list");
-            Console().print("4) To head");
+            Console::println("---------------MENU---------------");
+            Console::println("0) EXIT");
+            Console::println("1) Go to next");
+            Console::println("2) Change value");
+            Console::println("3) Drop list");
+            Console::println("4) To head");
             cin >> action;
             switch (action) {
                 case 0:
@@ -211,7 +214,7 @@ public:
                     it.next();
                     break;
                 case 2:
-                    Console().print("Enter value: ", 0);
+                    Console::print("Enter value: ");
                     cin >> action;
                     it.setData();
                     break;
@@ -221,10 +224,10 @@ public:
                 case 4:
                     it.toHead();
                 default:
-                    Console().print("Incorrect value");
+                    Console::println("Incorrect value");
                     break;
             }
-            //_getch();
+            getchar();
         }
 
     }

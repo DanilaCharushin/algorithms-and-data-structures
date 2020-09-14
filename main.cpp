@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define TST
+//#define TEST
 
 #ifdef TEST
 int main() {
@@ -28,10 +28,10 @@ int main() {
 #else
 
 int main() {
-    cout << "############ START ############" << endl;
-    List<int> list(5);
-    Menu().startMenu(list);
-    cout << "############ END ############" << endl;
+    srand(time(nullptr));
+
+    List<int> list(10);
+    Menu::startMenu(list);
     return 0;
 }
 

@@ -84,9 +84,9 @@ public:
 
     void print();
 
-    Data getAt(int index = 0);
+    Data getAt(int &counter, int index = 0);
 
-    void setAt(Data data = Data(), int index = 0);
+    void setAt(int &counter, Data data = Data(), int index = 0);
 
     int indexOf(Data data = Data());
 
@@ -214,8 +214,9 @@ List<Data>::List(int size) {
         throw invalid_argument("List size must be non-negative");
     }
     this->nullify();
+    int foo = 0;
     for (int i = 0; i < size; ++i) {
-        this->push(0, Data(rand() % 201 - 100));
+        this->push(foo, Data(rand() % 201 - 100));
     }
 }
 
@@ -336,6 +337,7 @@ void List<Data>::push(int &counter, Data data, int index) {
         Node *nodeAfter = this->head;
         for (int i = 0; i < index; ++i) {
             nodeAfter = nodeAfter->getNext();
+            counter++;
         }
         Node *node = new Node(data, nodeAfter, nodeAfter->getPrev());
         nodeAfter->getPrev()->setNext(node);
@@ -362,7 +364,6 @@ Data List<Data>::pop(int &counter, int index) {
     }
     Node *node = nullptr;
     if (index == 0) {
-        counter++;
         node = this->head;
         this->head = this->head->getNext();
         this->head->setPrev(nullptr);
@@ -386,10 +387,10 @@ Data List<Data>::pop(int &counter, int index) {
 template<class Data>
 bool List<Data>::contains(int &counter, Data data) {
     for (auto it = this->begin(); it.hasNode(); it++) {
-        counter++;
         if (it.getData() == data) {
             return true;
         }
+        counter++;
     }
     return false;
 }
@@ -454,24 +455,23 @@ void List<Data>::nullify() {
 }
 
 template<class Data>
-Data List<Data>::getAt(int index) {
+Data List<Data>::getAt(int &counter, int index) {
     this->checkAllExceptions();
     index = this->calcIndex(index);
     if (index == -1) {
         throw out_of_range("ERROR: index out of bounds");
     }
-
-    return this->getNodeAt(0, index)->getData();
+    return this->getNodeAt(counter, index)->getData();
 }
 
 template<class Data>
-void List<Data>::setAt(Data data, int index) {
+void List<Data>::setAt(int &counter, Data data, int index) {
     this->checkAllExceptions();
     index = this->calcIndex(index);
     if (index == -1) {
         throw out_of_range("ERROR: index out of bounds");
     }
-    this->getNodeAt(0, index)->setData(data);
+    this->getNodeAt(counter, index)->setData(data);
 }
 
 template<class Data>

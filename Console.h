@@ -5,72 +5,134 @@
 #ifndef LAB1_CONSOLE_H
 #define LAB1_CONSOLE_H
 
+//#define COLOR_ON
+
 #include <iostream>
 #include <cstring>
 
 using namespace std;
 
 class Console {
-private:
 public:
-    Console() {
-    };
+    Console() = default;
 
     enum COLORS {
         DEFAULT, RED, GREEN, BLUE
     };
 
-
-    static void print(int str, bool newline = true, COLORS color = DEFAULT) {
+    static void SET_COLOR(COLORS color = DEFAULT) {
         switch (color) {
             case RED:
                 system("color 04");
+                break;
+            case DEFAULT:
+                system("color 07");
+                break;
+            case GREEN:
+                system("color 02");
+                break;
+            case BLUE:
+                system("color 01");
+                break;
+            default:
+                system("color 07");
+                break;
         }
-        cout << str;
-        if (newline)
-            cout << endl;
-        system("color 07");
     }
 
-    static void print(double str, bool newline = true, COLORS color = DEFAULT) {
-        switch (color) {
-            case RED:
-                system("color 04");
-        }
+
+    static void print(int str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
         cout << str;
-        if (newline)
-            cout << endl;
-        system("color 07");
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
     }
 
-    static void printbool(bool str, bool newline = true, COLORS color = DEFAULT) {
-        switch (color) {
-            case RED:
-                system("color 04");
-        }
+    static void println(int str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
+        cout << str << endl;
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
+    }
+
+    static void print(double str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
+        cout << str;
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
+    }
+
+    static void println(double str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
+        cout << str << endl;
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
+    }
+
+    static void printBool(bool str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
         if (str)
             cout << "TRUE";
         else
             cout << "FALSE";
-        if (newline)
-            cout << endl;
-        system("color 07");
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
     }
 
-    static void print(const string str, bool newline = true, COLORS color = DEFAULT) {
-        switch (color) {
-            case RED:
-                system("color 04");
-        }
+    static void printlnBool(bool str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
+        if (str)
+            cout << "TRUE" << endl;
+        else
+            cout << "FALSE" << endl;
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
+    }
+
+    static void print(const string str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
         cout << str;
-        if (newline)
-            cout << endl;
-        system("color 07");
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
     }
 
+    static void println(const string str, COLORS color = DEFAULT) {
+#ifdef COLOR_ON
+        Console::SET_COLOR(color);
+#endif
+        cout << str << endl;
+#ifdef COLOR_ON
+        Console::SET_COLOR();
+#endif
+    }
 
     static void cls() {
+#ifdef WINDOWS
         system("cls");
+#else
+        system("clear");
+#endif
     }
 };
 
